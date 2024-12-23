@@ -14,8 +14,29 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Install xcodegen
+      run: brew install xcodegen
+
     - name: Create Xcode Project
       run: |
         mkdir fokusapp
         cd fokusapp
-        xcodebuild -project fokusapp.xcodeproj -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
+        echo "name: fokusapp" > project.yml
+        echo "options:" >> project.yml
+        echo "  bundleIdPrefix: com.example" >> project.yml
+        echo "  deploymentTarget: '13.0'" >> project.yml
+        echo "targets:" >> project.yml
+        echo "  fokusapp:" >> project.yml
+        echo "    type: application" >> project.yml
+        echo "    platform: iOS" >> project.yml
+        echo "    sources: [Sources]" >> project.yml
+        mkdir Sources
+        echo "import UIKit" > Sources/AppDelegate.swift
+        echo "@UIApplicationMain" >> Sources/AppDelegate.swift
+        echo "class AppDelegate: UIResponder, UIApplicationDelegate {" >> Sources/AppDelegate.swift
+        echo "  var window: UIWindow?" >> Sources/AppDelegate.swift
+        echo "  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {" >> Sources/AppDelegate.swift
+        echo "    return true" >> Sources/AppDelegate.swift
+        echo "  }" >> Sources/AppDelegate.swift
+        echo "}" >> Sources/AppDelegate.swift
+        xcodegen generate
