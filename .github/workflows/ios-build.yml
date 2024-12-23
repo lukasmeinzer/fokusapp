@@ -26,8 +26,8 @@ jobs:
 
     - name: Install dependencies
       run: pod install
-      working-directory: .
+      working-directory: /root/git_local/fokusapp
 
     - name: Build app
       run: xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
-      working-directory: .
+      working-directory: /root/git_local/fokusapp

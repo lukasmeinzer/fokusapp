@@ -5,3 +5,6 @@ use_frameworks!
 target 'fokusapp' do
   # Pods for fokusapp
 end
+
+# Specify the project path
+project 'fokusapp.xcodeproj'
