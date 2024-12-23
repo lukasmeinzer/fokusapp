@@ -1,0 +1,21 @@
+name: Initialize Xcode Project
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  initialize:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create Xcode Project
+      run: |
+        mkdir fokusapp
+        cd fokusapp
+        xcodebuild -project fokusapp.xcodeproj -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
