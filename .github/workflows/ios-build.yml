@@ -3,37 +3,31 @@ name: iOS Build
 on:
   push:
     branches:
-      - main # Change to your default branch
+      - main
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Set Up Xcode
-      run: xcode-select -p
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
 
-    - name: Install Dependencies
-      run: |
-        # Example: Install CocoaPods dependencies
-        pod install --repo-update
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
 
-    - name: Build Project
-      run: |
-        xcodebuild clean build \
-        -workspace YourProject.xcworkspace \ # Change to your workspace
-        -scheme YourScheme \ # Change to your scheme
-        -sdk iphonesimulator \
-        -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
+    - name: Install dependencies
+      run: pod install
+      working-directory: fokusapp
 
-    - name: Run Tests
-      run: |
-        xcodebuild test \
-        -workspace YourProject.xcworkspace \ # Change to your workspace
-        -scheme YourScheme \ # Change to your scheme
-        -sdk iphonesimulator \
-        -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
+    - name: Build app
+      run: xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
+      working-directory: fokusapp
