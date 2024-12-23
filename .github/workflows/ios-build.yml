@@ -1,0 +1,39 @@
+name: iOS Build
+
+on:
+  push:
+    branches:
+      - main # Change to your default branch
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set Up Xcode
+      run: xcode-select -p
+
+    - name: Install Dependencies
+      run: |
+        # Example: Install CocoaPods dependencies
+        pod install --repo-update
+
+    - name: Build Project
+      run: |
+        xcodebuild clean build \
+        -workspace YourProject.xcworkspace \ # Change to your workspace
+        -scheme YourScheme \ # Change to your scheme
+        -sdk iphonesimulator \
+        -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
+
+    - name: Run Tests
+      run: |
+        xcodebuild test \
+        -workspace YourProject.xcworkspace \ # Change to your workspace
+        -scheme YourScheme \ # Change to your scheme
+        -sdk iphonesimulator \
+        -destination 'platform=iOS Simulator,name=iPhone 14,OS=latest'
