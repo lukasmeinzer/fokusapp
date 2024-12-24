@@ -7,4 +7,4 @@ target 'fokusapp' do
 end
 
 # Specify the project path
-project 'fokusapp/fokusapp.xcodeproj'
+project 'fokusapp.xcodeproj'

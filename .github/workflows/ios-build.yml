@@ -22,11 +22,8 @@ jobs:
 
     - name: Create Xcode Project
       run: |
-        mkdir -p fokusapp
+        mkdir -p fokusapp/Sources
         cd fokusapp
-        if [ ! -d "Sources" ]; then
-          mkdir Sources
-        fi
         echo "name: fokusapp" > project.yml
         echo "options:" >> project.yml
         echo "  bundleIdPrefix: com.example" >> project.yml
@@ -45,6 +42,7 @@ jobs:
         echo "  }" >> Sources/AppDelegate.swift
         echo "}" >> Sources/AppDelegate.swift
         xcodegen generate
+      working-directory: fokusapp
 
   build:
     runs-on: macos-latest
