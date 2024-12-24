@@ -56,4 +56,40 @@ jobs:
 
     - name: Verify Files and Directories
       run: |
-        ec
+        echo "Verifying 'fokusapp' directory contents:"
+        ls -R fokusapp || { echo "'fokusapp' directory not found!"; exit 1; }
+
+  build:
+    runs-on: macos-latest
+    needs: initialize
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1'
+
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+
+    - name: Initialize CocoaPods and Install Dependencies
+      run: |
+        if [ ! -d "fokusapp" ]; then
+          echo "Error: 'fokusapp' directory not found during build phase!"
+          exit 1
+        fi
+        cd fokusapp
+        pod init
+        pod install
+
+    - name: Build app
+      run: |
+        if [ ! -d "fokusapp" ]; then
+          echo "Error: 'fokusapp' directory not found during build phase!"
+          exit 1
+        fi
+        cd fokusapp
+        xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
