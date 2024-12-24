@@ -56,14 +56,14 @@ jobs:
 
     - name: Verify Files and Directories
       run: |
-        echo "Verifying 'fokusapp' directory contents:"
+        echo "Verifying 'fokusapp' directory contents before upload:"
         ls -R fokusapp || { echo "'fokusapp' directory not found!"; exit 1; }
 
     - name: Upload Project Directory
       uses: actions/upload-artifact@v3
       with:
         name: fokusapp
-        path: fokusapp
+        path: fokusapp/
 
   build:
     runs-on: macos-latest
@@ -78,9 +78,9 @@ jobs:
       with:
         name: fokusapp
 
-    - name: Verify Downloaded Directory
+    - name: Debug Artifact Contents
       run: |
-        echo "Verifying downloaded 'fokusapp' directory contents:"
+        echo "Verifying 'fokusapp' directory after download:"
         ls -R fokusapp || { echo "'fokusapp' directory not found after download!"; exit 1; }
 
     - name: Set up Ruby
