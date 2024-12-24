@@ -45,7 +45,6 @@ jobs:
         echo "  }" >> Sources/AppDelegate.swift
         echo "}" >> Sources/AppDelegate.swift
         xcodegen generate
-      working-directory: fokusapp
 
   build:
     runs-on: macos-latest
@@ -69,4 +68,4 @@ jobs:
 
     - name: Build app
       run: xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
-      
+      working-directory: fokusapp
