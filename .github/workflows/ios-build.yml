@@ -54,7 +54,7 @@ jobs:
         xcodegen generate --spec fokusapp/project.yml --project-root fokusapp
       shell: bash
 
-    - name: Verify Files and Directories
+    - name: Verify Files and Directories Before Upload
       run: |
         echo "Verifying 'fokusapp' directory contents before upload:"
         ls -R fokusapp || { echo "'fokusapp' directory not found!"; exit 1; }
@@ -73,14 +73,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: List All Artifacts (Debug Step)
+      run: |
+        echo "Listing all artifacts:"
+        ls || { echo "No artifacts found in the workspace!"; exit 1; }
+
     - name: Download Project Directory
       uses: actions/download-artifact@v3
       with:
         name: fokusapp
 
-    - name: Debug Artifact Contents
+    - name: Verify Downloaded Directory
       run: |
-        echo "Verifying 'fokusapp' directory after download:"
+        echo "Verifying 'fokusapp' directory contents after download:"
         ls -R fokusapp || { echo "'fokusapp' directory not found after download!"; exit 1; }
 
     - name: Set up Ruby
