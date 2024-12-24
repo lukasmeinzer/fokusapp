@@ -22,8 +22,11 @@ jobs:
 
     - name: Create Xcode Project
       run: |
-        mkdir -p fokusapp/Sources
+        mkdir -p fokusapp
         cd fokusapp
+        if [ ! -d "Sources" ]; then
+          mkdir Sources
+        fi
         echo "name: fokusapp" > project.yml
         echo "options:" >> project.yml
         echo "  bundleIdPrefix: com.example" >> project.yml
@@ -33,7 +36,6 @@ jobs:
         echo "    type: application" >> project.yml
         echo "    platform: iOS" >> project.yml
         echo "    sources: [Sources]" >> project.yml
-        mkdir Sources
         echo "import UIKit" > Sources/AppDelegate.swift
         echo "@UIApplicationMain" >> Sources/AppDelegate.swift
         echo "class AppDelegate: UIResponder, UIApplicationDelegate {" >> Sources/AppDelegate.swift
