@@ -22,7 +22,7 @@ jobs:
 
     - name: Create Xcode Project
       run: |
-        mkdir -p fokusapp/Sources
+        [ -d fokusapp/Sources ] || mkdir -p fokusapp/Sources
         cd fokusapp
         echo "name: fokusapp" > project.yml
         echo "options:" >> project.yml
