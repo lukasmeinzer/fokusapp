@@ -33,6 +33,7 @@ jobs:
         echo "    type: application" >> project.yml
         echo "    platform: iOS" >> project.yml
         echo "    sources: [Sources]" >> project.yml
+        mkdir Sources
         echo "import UIKit" > Sources/AppDelegate.swift
         echo "@UIApplicationMain" >> Sources/AppDelegate.swift
         echo "class AppDelegate: UIResponder, UIApplicationDelegate {" >> Sources/AppDelegate.swift
@@ -42,6 +43,7 @@ jobs:
         echo "  }" >> Sources/AppDelegate.swift
         echo "}" >> Sources/AppDelegate.swift
         xcodegen generate
+      working-directory: fokusapp
 
   build:
     runs-on: macos-latest
