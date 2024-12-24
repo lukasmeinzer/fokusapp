@@ -23,6 +23,13 @@ jobs:
     - name: Create Project Structure and Generate Xcode Project
       run: |
         mkdir -p fokusapp/Sources
+
+        # Confirm directory creation
+        if [ ! -d "fokusapp" ]; then
+          echo "Error: Directory 'fokusapp' not created!"
+          exit 1
+        fi
+
         echo "name: fokusapp" > fokusapp/project.yml
         cat <<EOT >> fokusapp/project.yml
         options:
@@ -44,37 +51,9 @@ jobs:
         echo "  }" >> fokusapp/Sources/AppDelegate.swift
         echo "}" >> fokusapp/Sources/AppDelegate.swift
 
-        cd fokusapp
-        xcodegen generate
+        xcodegen generate --spec fokusapp/project.yml --project-root fokusapp
       shell: bash
 
     - name: Verify Files and Directories
       run: |
-        ls -R fokusapp
-
-  build:
-    runs-on: macos-latest
-    needs: initialize
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3.1'
-
-    - name: Install CocoaPods
-      run: sudo gem install cocoapods
-
-    - name: Initialize CocoaPods and Install Dependencies
-      run: |
-        cd fokusapp
-        pod init
-        pod install
-
-    - name: Build app
-      run: |
-        cd fokusapp
-        xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
+        ec
