@@ -20,29 +20,37 @@ jobs:
     - name: Install xcodegen
       run: brew install xcodegen
 
-    - name: Create Xcode Project
+    - name: Create Project Structure and Generate Xcode Project
       run: |
         mkdir -p fokusapp/Sources
+        echo "name: fokusapp" > fokusapp/project.yml
+        cat <<EOT >> fokusapp/project.yml
+        options:
+          bundleIdPrefix: com.example
+          deploymentTarget: '13.0'
+        targets:
+          fokusapp:
+            type: application
+            platform: iOS
+            sources: [Sources]
+        EOT
+
+        echo "import UIKit" > fokusapp/Sources/AppDelegate.swift
+        echo "@UIApplicationMain" >> fokusapp/Sources/AppDelegate.swift
+        echo "class AppDelegate: UIResponder, UIApplicationDelegate {" >> fokusapp/Sources/AppDelegate.swift
+        echo "  var window: UIWindow?" >> fokusapp/Sources/AppDelegate.swift
+        echo "  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {" >> fokusapp/Sources/AppDelegate.swift
+        echo "    return true" >> fokusapp/Sources/AppDelegate.swift
+        echo "  }" >> fokusapp/Sources/AppDelegate.swift
+        echo "}" >> fokusapp/Sources/AppDelegate.swift
+
         cd fokusapp
-        echo "name: fokusapp" > project.yml
-        echo "options:" >> project.yml
-        echo "  bundleIdPrefix: com.example" >> project.yml
-        echo "  deploymentTarget: '13.0'" >> project.yml
-        echo "targets:" >> project.yml
-        echo "  fokusapp:" >> project.yml
-        echo "    type: application" >> project.yml
-        echo "    platform: iOS" >> project.yml
-        echo "    sources: [Sources]" >> project.yml
-        echo "import UIKit" > Sources/AppDelegate.swift
-        echo "@UIApplicationMain" >> Sources/AppDelegate.swift
-        echo "class AppDelegate: UIResponder, UIApplicationDelegate {" >> Sources/AppDelegate.swift
-        echo "  var window: UIWindow?" >> Sources/AppDelegate.swift
-        echo "  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {" >> Sources/AppDelegate.swift
-        echo "    return true" >> Sources/AppDelegate.swift
-        echo "  }" >> Sources/AppDelegate.swift
-        echo "}" >> Sources/AppDelegate.swift
         xcodegen generate
-      working-directory: fokusapp
+      shell: bash
+
+    - name: Verify Files and Directories
+      run: |
+        ls -R fokusapp
 
   build:
     runs-on: macos-latest
@@ -60,10 +68,13 @@ jobs:
     - name: Install CocoaPods
       run: sudo gem install cocoapods
 
-    - name: Install dependencies
-      run: pod install
-      working-directory: fokusapp
+    - name: Initialize CocoaPods and Install Dependencies
+      run: |
+        cd fokusapp
+        pod init
+        pod install
 
     - name: Build app
-      run: xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
-      working-directory: fokusapp
+      run: |
+        cd fokusapp
+        xcodebuild -workspace fokusapp.xcworkspace -scheme fokusapp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=14.5' build
