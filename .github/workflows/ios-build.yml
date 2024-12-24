@@ -45,6 +45,7 @@ jobs:
         echo "  }" >> Sources/AppDelegate.swift
         echo "}" >> Sources/AppDelegate.swift
         xcodegen generate
+      working-directory: fokusapp
 
   build:
     runs-on: macos-latest
